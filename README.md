@@ -3,6 +3,7 @@
 To get the final output as a HTML report follow the following steps
 * Get a team specific q1 or q2 manual test cases from the [taleggio debt report](https://gus.lightning.force.com/lightning/r/Dashboard/01ZEE000000Vg2z2AC/view?queryScope=userFolders)
 * Export the report as a CSV to a file called `<team-name>-<quadrant>-manual-test-scenarios.csv`
+* Authenticate to gus in your terminal using `sfdx force:auth:web:login -r https://gus.my.salesforce.com -s`
 * Run `getWorkItemIdsFromTestScenario.py` with an argument `<team-name>-<quadrant>`
 * One of the files which is generated is of type `<team-name>-<quadrant>-cl.csv`
 * Run `getPerforceCLDetails.py` with the CL list generated from the above program and concatenate the output to a txt file and name it `<team-name>-<quadrant>-manual-perforce-cls.txt`
