@@ -10,4 +10,4 @@ To get the final output as a HTML report follow the following steps
 
 > I am using vscode and have the entire repo there and can run the code from the built in terminal.
 
-* Sample input and output are in the sample folder
+* Example input and sample output are in the `sample` folder
