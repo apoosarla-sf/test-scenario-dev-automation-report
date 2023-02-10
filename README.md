@@ -9,3 +9,5 @@ To get the final output as a HTML report follow the following steps
 * Now run `generateHTMLReport.py <team-name>-<quadrant>` which will generate a HTML file named `<team-name>-<quadrant>-wi-cl-ts-report.html` which you can then use to refer and mark things which are automated but marked as manual.
 
 > I am using vscode and have the entire repo there and can run the code from the built in terminal.
+
+* Sample input and output are in the sample folder
