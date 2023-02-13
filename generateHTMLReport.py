@@ -5,12 +5,12 @@ import os
 import re
 import copy
 
-if len(sys.argv) < 2:
-    print("Error: No teamname-quadrant provided ex : qira-q1")
-    sys.exit(1)
+# if len(sys.argv) < 2:
+#     print("Error: No teamname-quadrant provided ex : qira-q1")
+#     sys.exit(1)
 
-team_quadrant = sys.argv[1].strip().lower()
-# team_quadrant = 'leia-q1'
+# team_quadrant = sys.argv[1].strip().lower()
+team_quadrant = 'qira-q1'
 
 # List of keywords to filter by
 test_file_paths = ["/test/", "unit", "__test__"]
@@ -59,26 +59,30 @@ def build_href_column_set_of_sets(items_set, href_url):
     column += "</td>"
     return column
 
-def check_if_test_scenario_repeated(test_scenario_values_from_test_suite, value):
-    return test_scenario_values_from_test_suite.count(value) > 1
+def check_scenario_id(scenario_id, scenario_map):
+    count = 0
+    for map_item in scenario_map:
+        if scenario_id in map_item['Test_Scenario__c']:
+            count += 1
+    return count > 1
 
-def build_test_scenario_column(items_set, manual_test_scenario_map, href_url, test_scenario_values_from_test_suite):
+def build_test_scenario_column(test_scenario_ids_set, manual_test_scenario_map, href_url, test_suite_test_scenario_map_values):
     column = "<td>"
-    for item in items_set:
-        column += "<li><a href='{}{}'>{}".format(href_url, item, next(iter(get_value_from_map_of_maps(manual_test_scenario_map, str(item[:-3]), "Test Scenario Name"))))
-        if check_if_test_scenario_repeated(test_scenario_values_from_test_suite, item):
+    for test_scenario_id in test_scenario_ids_set:
+        column += "<li><a href='{}{}'>{}".format(href_url, test_scenario_id, next(iter(get_value_from_map_of_maps(manual_test_scenario_map, str(test_scenario_id[:-3]), "Test Scenario Name"))))
+        if check_scenario_id(test_scenario_id, test_suite_test_scenario_map_values):
             column += "(*) </a></li>"
         else:
             column += "</a></li>"
     column += "</td>"
     #Product Tag column
     column += "<td>"
-    column += next(iter(get_value_from_map_of_maps(manual_test_scenario_map, str(item[:-3]), 'Product Tag')))
+    column += next(iter(get_value_from_map_of_maps(manual_test_scenario_map, str(test_scenario_id[:-3]), 'Product Tag')))
     column += "</td>"
     # Owner and Created Column
     column += "<td>"
-    column += next(iter(get_value_from_map_of_maps(manual_test_scenario_map, str(item[:-3]), 'Test Scenario: Owner Name'))) +\
-                " / " + next(iter(get_value_from_map_of_maps(manual_test_scenario_map, str(item[:-3]), 'Test Scenario: Created By')))
+    column += next(iter(get_value_from_map_of_maps(manual_test_scenario_map, str(test_scenario_id[:-3]), 'Test Scenario: Owner Name'))) +\
+                " / " + next(iter(get_value_from_map_of_maps(manual_test_scenario_map, str(test_scenario_id[:-3]), 'Test Scenario: Created By')))
     column += "</td>"
     return column
 
@@ -116,8 +120,6 @@ def generate_html_table(data_map, manual_test_scenario_map, test_suite_test_scen
     header += "</tr>"
 
     rows = ""
-    copy_test_suite_test_scenario_map = copy.deepcopy(test_suite_test_scenario_map)
-    test_scenario_values_from_test_suite = [d['Test_Scenario__c'].pop() for d in copy_test_suite_test_scenario_map.values()]
     for test_suite_id, values in data_map.items():
         row = "<tr><td><a href='https://gus.lightning.force.com/{}'>{}</a></td>"\
             .format(test_suite_id, next(iter(get_value_from_map_of_maps(test_suite_test_scenario_map, test_suite_id, "Test_Suite_Name__c"))))
@@ -125,7 +127,7 @@ def generate_html_table(data_map, manual_test_scenario_map, test_suite_test_scen
         test_scenario_ids = get_value_from_map_of_maps(test_suite_test_scenario_map, test_suite_id, "Test_Scenario__c")
 
         # for scenario_id in test_scenario_ids:
-        row += build_test_scenario_column(test_scenario_ids, manual_test_scenario_map, 'https://gus.lightning.force.com/', test_scenario_values_from_test_suite)
+        row += build_test_scenario_column(test_scenario_ids, manual_test_scenario_map, 'https://gus.lightning.force.com/', test_suite_test_scenario_map.values())
 
         # for index, value in enumerate(values):
         for index in range(len(values)):
