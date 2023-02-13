@@ -13,7 +13,7 @@ import copy
 team_quadrant = 'qira-q1'
 
 # List of keywords to filter by
-test_file_paths = ["/test/", "unit", "__test__"]
+test_file_paths = ["/test/", "unit", "__test__", ".test.js"]
 cl_file_map = {}
 
 def format_cl_output():
