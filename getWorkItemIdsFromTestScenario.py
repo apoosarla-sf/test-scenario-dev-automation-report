@@ -68,7 +68,7 @@ for idx, test_scenario_id_batch in enumerate(test_scenario_id_batches):
     test_scenario_test_suite_soql = "SELECT Test_Suite__c,Test_Suite_Name__c,Test_Scenario__c FROM ADM_Related_Test_Scenario__c where Test_Scenario__c in (" + get_csv_from_list(test_scenario_id_batch) + ")"
     execute_soql(test_scenario_test_suite_soql, test_scenario_test_suite_file_name + "." + str(idx))
 
-file_names = glob.glob("*-test-scenario-test-suite.csv.[0-9]*")
+file_names = glob.glob(team_quadrant + "-test-scenario-test-suite.csv.[0-9]*")
 combine_csv_files(file_names, test_scenario_test_suite_file_name)
 
 ##### Get all test work ids from test suites
@@ -80,7 +80,7 @@ for idx, test_suite_id_batch in enumerate(test_suite_id_batches):
     test_suite_work_id_soql = "SELECT Test_Suite__c,Work__c FROM ADM_Related_Test_Suite__c WHERE Test_Suite__c IN (" + get_csv_from_list(test_suite_id_batch) + ")"
     execute_soql(test_suite_work_id_soql, test_suite_work_id_file_name + "." + str(idx))
 
-file_names = glob.glob("*-test-suite-work-id.csv.[0-9]*")
+file_names = glob.glob(team_quadrant + "-test-suite-work-id.csv.[0-9]*")
 combine_csv_files(file_names, test_suite_work_id_file_name)
 
 ##### Get all cls from work ids
@@ -93,7 +93,7 @@ for idx, work_id_batch in enumerate(work_id_batches):
     work_ids_cl_soql = "SELECT Work__c,Perforce_Changelist__c FROM ADM_Change_List__c WHERE Work__c IN (" + get_csv_from_list(work_id_batch) + ") AND Source__c = 'Perforce'"
     execute_soql(work_ids_cl_soql, work_id__cl_file_name + "." + str(idx))
 
-file_names = glob.glob("*-work-id-cl.csv.[0-9]*")
+file_names = glob.glob(team_quadrant + "-work-id-cl.csv.[0-9]*")
 combine_csv_files(file_names, work_id__cl_file_name)
 
 perforce_cl_ids=get_column_values_from_file(work_id__cl_file_name, "Perforce_Changelist__c")
@@ -107,4 +107,3 @@ print("Completed generation of " + team_quadrant + "-cl.csv")
 
 #Run the python script and get the CL details in a text file format
 # once you have that text file - ensure you have the right name and then then call generateHTMLReport.py
-
